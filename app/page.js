@@ -12,6 +12,7 @@ export default function Home() {
   const [sourceText, setSourceText] = useState(""); // 输入框state
   const [displayText, setDisplayText] = useState(""); // 输出框state
   const [historyText, setHistoryText] = useState("");
+  const [markdownMode, setMarkdownMode] = useState(true);
 
   const inputFileRef = useRef(null);
   const [bind, setBind] = useState(false);
@@ -48,7 +49,13 @@ export default function Home() {
 
   // TODO: 文件翻译功能
   const handleTranslate = async () => {
-    translateText(sourceText, historyText, setDisplayText, setHistoryText);
+    translateText(
+      sourceText,
+      historyText,
+      markdownMode,
+      setDisplayText,
+      setHistoryText
+    );
   };
 
   // ----------------------- 历史记录 -----------------------
@@ -59,6 +66,12 @@ export default function Home() {
 
   const handleDownload = () => {
     downloadText(historyText);
+  };
+
+  // -------------------- Markdown 模式 --------------------
+
+  const handleChangeMarkdownMode = () => {
+    setMarkdownMode(!markdownMode);
   };
 
   // ----------------------- 绑定按钮 -----------------------
@@ -90,6 +103,13 @@ export default function Home() {
         handleInputPaste={handleInputPaste}
       />
       <button onClick={handleTranslate}>翻译文本</button>
+      <input
+        type="checkbox"
+        name="markdownMode"
+        checked={markdownMode}
+        onChange={handleChangeMarkdownMode}
+      />
+      <label htmlFor="markdownMode">Markdown Mode</label>
       <TextDisplay
         displayText={displayText}
         handleClearDisplay={handleClearDisplay}
