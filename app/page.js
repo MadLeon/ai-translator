@@ -6,12 +6,12 @@ import TextInput from "./TextInput";
 import TextDisplay from "./TextDisplay";
 import TextHistory from "./TextHistory";
 import { translateText, downloadText } from "./lib/utils";
-import { translateFile } from "./lib/utils";
 
 export default function Home() {
   const [sourceText, setSourceText] = useState(""); // 输入框state
   const [displayText, setDisplayText] = useState(""); // 输出框state
   const [historyText, setHistoryText] = useState("");
+  const [fileContent, setFileContent] = useState("");
   const [markdownMode, setMarkdownMode] = useState(true);
 
   const inputFileRef = useRef(null);
@@ -74,7 +74,7 @@ export default function Home() {
     setMarkdownMode(!markdownMode);
   };
 
-  // ----------------------- 绑定按钮 -----------------------
+  // ----------------------- 打开文件 -----------------------
 
   const handleBindClick = () => {
     inputFileRef.current.click();
@@ -83,6 +83,17 @@ export default function Home() {
   const handleSelectFile = (event) => {
     setFileName(event.target.files[0].name);
     setFilePath(URL.createObjectURL(event.target.files[0]));
+    // 在输入框读取内容
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const content = e.target.result;
+      setFileContent(content);
+      setSourceText(content);
+    };
+
+    // 以文本格式读取文件内容
+    reader.readAsText(event.target.files[0]);
   };
 
   return (
@@ -96,6 +107,7 @@ export default function Home() {
         onChange={handleSelectFile}
       />
       <span>{bind ? "🟢" : "🔴"}</span>
+      <span>{fileName}</span>
       <TextInput
         sourceText={sourceText}
         handleInputChange={handleInputChange}

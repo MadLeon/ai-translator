@@ -14,7 +14,6 @@ export const translateText = async (
 ) => {
   if (!sourceText) return;
   if (markdownMode) {
-    // 分割
     let split = splitTextMdMode(sourceText);
     let organized = organizeTextMdMode(split);
     let translated = await translateArrayMdMode(organized, setDisplayText);
@@ -22,7 +21,6 @@ export const translateText = async (
       (prevHistoryText) =>
         prevHistoryText + (historyText === "" ? "" : "\n\n") + translated
     );
-    console.log(organized);
   } else {
     // 整理
     let organized = organizeText(sourceText);
@@ -195,13 +193,6 @@ const organizeText = (sourceText) => {
     result += textArray[i];
   }
 
-  return result;
-};
-
-// ------------------------------------------------------
-
-export const translateFile = () => {
-  let result = "";
   return result;
 };
 
