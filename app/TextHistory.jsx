@@ -4,6 +4,7 @@ export default function TextHistory({
   historyText,
   handleHistoryChange,
   handleDownload,
+  handleClearHistory,
 }) {
   return (
     <div>
@@ -14,6 +15,7 @@ export default function TextHistory({
         handleInputChange={handleHistoryChange}
       />
       <button onClick={handleDownload}>下载</button>
+      <button onClick={handleClearHistory}>清空</button>
     </div>
   );
 }

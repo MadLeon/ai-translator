@@ -55,7 +55,11 @@ const organizeTextMdMode = (sourceArray) => {
       return "";
     }
     // 是否以•或o开头 - ppt 课件专用
-    if (item.trimLeft().startsWith("•") || item.trimLeft().startsWith("o")) {
+    if (
+      item.trimLeft().startsWith("•") ||
+      item.trimLeft().startsWith("o") ||
+      item.trimLeft().startsWith("❑")
+    ) {
       // 如果是，则替换为"- "
       return "- " + item.trimLeft().substring(1).trimLeft();
     }

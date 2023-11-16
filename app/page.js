@@ -68,6 +68,10 @@ export default function Home() {
     downloadText(historyText);
   };
 
+  const handleClearHistory = () => {
+    setHistoryText("");
+  };
+
   // -------------------- Markdown 模式 --------------------
 
   const handleChangeMarkdownMode = () => {
@@ -131,6 +135,7 @@ export default function Home() {
         historyText={historyText}
         handleHistoryChange={handleHistoryChange}
         handleDownload={handleDownload}
+        handleClearHistory={handleClearHistory}
       />
     </div>
   );
