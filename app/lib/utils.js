@@ -173,20 +173,26 @@ const organizeText = (sourceText) => {
   // 删除符合正则表达式的行
   let cleanedText = cleanZoomCaptionTimeStamp(sourceText);
 
-  // let textArray = sourceText.split("");
-  let textArray = cleanedText.split("");
+  // 去掉换行符附近的空白字符
+  let paragraphs = cleanedText.split("\n");
+  for (let i = 0; i < paragraphs.length; i++) {
+    paragraphs[i] = paragraphs[i].trim();
+  }
+  let trimmedText = paragraphs.join("\n");
+
   let result = "";
+  let textArray = trimmedText.split("");
 
   // 循环寻找换行符号
   for (let i = 0; i < textArray.length; i++) {
-    const currentChar = textArray[i];
-    const previousChar = textArray[i - 1];
-    const nextChar = textArray[i + 1];
+    let currentChar = textArray[i];
+    let previousChar = textArray[i - 1];
+    let nextChar = textArray[i + 1];
 
     if (currentChar === "\n") {
       // 段落结尾
-      if (previousChar && previousChar === ".") {
-        if (nextChar && nextChar !== "\n") {
+      if ((previousChar === ".") | (previousChar === " ")) {
+        if (nextChar !== "\n") {
           // 段落结尾添加空行
           textArray.splice(i + 1, 0, "\n");
         }
@@ -194,7 +200,7 @@ const organizeText = (sourceText) => {
         // 段落间空行
         if (previousChar && previousChar === "\n") {
           // 连续空行(不需要)
-          if (nextChar && nextChar === "\n") {
+          if (nextChar === "\n") {
             textArray[i] = "";
           }
         } else {
