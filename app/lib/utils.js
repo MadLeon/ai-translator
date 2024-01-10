@@ -164,8 +164,17 @@ const splitText = (sourceText) => {
   return sourceText.split("\n\n");
 };
 
+const cleanZoomCaptionTimeStamp = (sourceText) => {
+  let cleanedText = sourceText.replace(/\[.*?\] \d{2}:\d{2}:\d{2}\s*/g, "");
+  return cleanedText;
+};
+
 const organizeText = (sourceText) => {
-  let textArray = sourceText.split("");
+  // 删除符合正则表达式的行
+  let cleanedText = cleanZoomCaptionTimeStamp(sourceText);
+
+  // let textArray = sourceText.split("");
+  let textArray = cleanedText.split("");
   let result = "";
 
   // 循环寻找换行符号
