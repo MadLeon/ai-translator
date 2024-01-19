@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useRef } from "react";
 
-import TextInput from "./TextInput";
-import TextDisplay from "./TextDisplay";
-import TextHistory from "./TextHistory";
-import { translateText, downloadText } from "./lib/utils";
+import TextInput from "../TextInput";
+import TextDisplay from "../TextDisplay";
+import TextHistory from "../TextHistory";
+import { translateText, downloadText } from "../lib/utils";
 
 export default function Home() {
   const [sourceText, setSourceText] = useState(""); // 输入框state
