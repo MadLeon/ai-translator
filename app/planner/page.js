@@ -1,3 +1,9 @@
-export default function Page() {
-  return <p>Planner Page</p>;
+import Categories from "../ui/planner/categories";
+
+export default async function Page() {
+  return (
+    <>
+      <Categories />
+    </>
+  );
 }
