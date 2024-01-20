@@ -107,7 +107,9 @@ const translateArrayMdMode = async (sourceArray, setDisplayText) => {
       if (translatedItem.startsWith("- ")) {
         translatedItem = translatedItem.replace("- ", "  ");
       }
-      return `${sourceItem}${translatedItem}\n`;
+      if (sourceItem.startsWith("#"))
+        return `${sourceItem.trim()} ${translatedItem.replace(/^#+/, "")}\n`;
+      else return `${sourceItem}${translatedItem}\n`;
     });
 
     // 所有 Promise 完成后更新状态
@@ -232,4 +234,36 @@ export const downloadText = (historyText) => {
 
   // 释放Blob URL
   URL.revokeObjectURL(blobURL);
+};
+
+// --------------------------------------------------------
+
+/**
+ *
+ * @param {string} sourceText State value
+ * @param {bool} markdownMode State value
+ * @param {function} setSourceText State function
+ */
+export const cleanUpText = (sourceText, markdownMode, setSourceText) => {
+  let sourceArray = splitTextMdMode(sourceText);
+
+  // let trimmedArray = removeSpace(sourceArray);
+  // console.log(trimmedArray);
+
+  for (let i = 0; i < sourceArray.length; i++) {
+    sourceArray[i] = sourceArray[i].trim();
+    if (
+      sourceArray[i].trim().length === 1 && // Only has one char
+      isNonAlphanumeric(sourceArray[i][0]) && // Is not alphanumeric value
+      i < sourceArray.length - 1 // Has at least one following line
+    ) {
+      sourceArray[i] = ""; // remove the invalid char
+      sourceArray[i + 1] = "- " + sourceArray[i + 1]; // Add a "- " at the beginning of next line
+    }
+  }
+  setSourceText(sourceArray.filter((line) => line != "").join("\n"));
+};
+
+const isNonAlphanumeric = (char) => {
+  return /\W/.test(char);
 };

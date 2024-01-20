@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import TextInput from "../TextInput";
 import TextDisplay from "../TextDisplay";
 import TextHistory from "../TextHistory";
-import { translateText, downloadText } from "../lib/utils";
+import { translateText, downloadText, cleanUpText } from "../lib/utils";
 
 export default function Home() {
   const [sourceText, setSourceText] = useState(""); // 输入框state
@@ -78,6 +78,10 @@ export default function Home() {
     setMarkdownMode(!markdownMode);
   };
 
+  const handleCleanUp = () => {
+    cleanUpText(sourceText, markdownMode, setSourceText);
+  };
+
   // ----------------------- 打开文件 -----------------------
 
   const handleBindClick = () => {
@@ -118,6 +122,7 @@ export default function Home() {
         handleClearInput={handleClearInput}
         handleInputPaste={handleInputPaste}
       />
+      <button onClick={handleCleanUp}>整理文本</button>
       <button onClick={handleTranslate}>翻译文本</button>
       <input
         type="checkbox"

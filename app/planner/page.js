@@ -1,9 +1,7 @@
-import Categories from "../ui/planner/categories";
+import Categories from "../ui/planner/Categories";
+import { fetchCategories } from "../lib/sql";
 
 export default async function Page() {
-  return (
-    <>
-      <Categories />
-    </>
-  );
+  const categories = await fetchCategories();
+  return <Categories categories={categories} />;
 }
