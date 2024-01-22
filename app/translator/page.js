@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 
-import TextInput from "../TextInput";
-import TextDisplay from "../TextDisplay";
-import TextHistory from "../TextHistory";
+import TextInput from "../ui/translator/TextInput";
+import TextDisplay from "../ui/translator/TextDisplay";
+import TextHistory from "../ui/translator/TextHistory";
 import { translateText, downloadText, cleanUpText } from "../lib/utils";
 
 export default function Home() {
