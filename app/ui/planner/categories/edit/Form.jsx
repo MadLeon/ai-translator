@@ -3,7 +3,6 @@ import Link from "next/link";
 import { updateCategory } from "@/app/lib/action";
 
 export default function Form({ category }) {
-  console.log(category);
   return (
     <form action={updateCategory}>
       <label htmlFor="id">ID</label>

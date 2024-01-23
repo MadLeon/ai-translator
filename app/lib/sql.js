@@ -22,7 +22,7 @@ export async function fetchCategoryNames() {
  */
 export async function fetchCategories() {
   try {
-    const categories = await sql`SELECT * FROM categories;`;
+    const categories = await sql`SELECT * FROM categories ORDER BY remark`;
     return categories.rows;
   } catch (error) {
     console.error("Database Error:", error);
@@ -32,8 +32,8 @@ export async function fetchCategories() {
 
 export async function fetchCategoryById(id) {
   try {
-    const category = await sql`SELECT * FROM categories WHERE id = ${id}`;
-    // console.log(category.rows[0]);
+    const category = await sql`SELECT * FROM categories WHERE id = ${id};`;
+    console.log(category.rows);
     return category.rows[0];
   } catch (error) {
     console.error("Database Error:", error);
@@ -48,7 +48,7 @@ export async function fetchCategoryById(id) {
 export async function fetchTasksByCategory(category) {
   try {
     const records =
-      await sql`SELECT * FROM tasks WHERE category = ${category} AND status = true`;
+      await sql`SELECT * FROM tasks WHERE category = ${category} AND status = true ORDER BY due_date`;
     return records.rows;
   } catch (error) {
     console.error("Database Error:", error);
@@ -62,7 +62,8 @@ export async function fetchTasksByCategory(category) {
  */
 export async function fetchAllTasks() {
   try {
-    const tasks = await sql`SELECT * FROM tasks WHERE status = true`;
+    const tasks =
+      await sql`SELECT * FROM tasks WHERE status = true ORDER BY due_date`;
     return tasks.rows;
   } catch (error) {
     console.error("Database Error:", error);
@@ -77,8 +78,8 @@ export async function fetchAllTasks() {
  */
 export async function fetchTaskById(id) {
   try {
-    const task = await sql`SELECT * FROM tasks WHERE id = ${id};`;
-    // console.log(task.rows[0]);
+    const task = await sql`SELECT * FROM tasks WHERE id = ${id}`;
+    console.log(task.rows[0]);
     return task.rows[0];
   } catch (error) {
     console.error("Database Error:", error);

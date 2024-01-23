@@ -121,6 +121,7 @@ export async function updateCategory(formData) {
   SET "name" = ${name}, abbreviation = ${abbreviation}, section = ${section}, remark = ${remark}
   WHERE id = ${id};
   `;
+  revalidatePath(`/planner/categories/${id}/edit`);
   revalidatePath("/planner/categories");
   redirect("/planner/categories");
 }
