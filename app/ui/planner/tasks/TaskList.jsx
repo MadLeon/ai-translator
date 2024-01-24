@@ -19,13 +19,14 @@ export default async function TaskList() {
           <tr>
             <th>Due Date</th>
             <th>Weekday</th>
+            <th>Category</th>
             <th>Title</th>
             <th>Description</th>
           </tr>
         </thead>
         <tbody>
           {tasks.map((task, index) => (
-            <TaskRecord key={index} record={task} />
+            <TaskRecord key={index} record={task} noCategory={false} />
           ))}
         </tbody>
       </table>

@@ -1,22 +1,6 @@
 import { sql } from "@vercel/postgres";
 
 /**
- * @return {Array} Array of all names of categories
- */
-export async function fetchCategoryNames() {
-  try {
-    const categories =
-      await sql`SELECT DISTINCT category FROM tasks WHERE status = true`;
-    return categories.rows.map((item) => {
-      return item.category;
-    });
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch the categories.");
-  }
-}
-
-/**
  *
  * @returns {array} Array of all categories
  */
@@ -48,7 +32,7 @@ export async function fetchCategoryById(id) {
 export async function fetchTasksByCategory(category) {
   try {
     const records =
-      await sql`SELECT * FROM tasks WHERE category = ${category} AND status = true ORDER BY due_date`;
+      await sql`SELECT * FROM tasks WHERE category = ${category} AND status = true ORDER BY due_date LIMIT 5`;
     return records.rows;
   } catch (error) {
     console.error("Database Error:", error);
@@ -63,7 +47,8 @@ export async function fetchTasksByCategory(category) {
 export async function fetchAllTasks() {
   try {
     const tasks =
-      await sql`SELECT * FROM tasks WHERE status = true ORDER BY due_date`;
+      await sql`SELECT * FROM tasks WHERE status = true ORDER BY due_date LIMIT 10
+`;
     return tasks.rows;
   } catch (error) {
     console.error("Database Error:", error);
