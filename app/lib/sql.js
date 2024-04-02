@@ -17,7 +17,6 @@ export async function fetchCategories() {
 export async function fetchCategoryById(id) {
   try {
     const category = await sql`SELECT * FROM categories WHERE id = ${id};`;
-    console.log(category.rows);
     return category.rows[0];
   } catch (error) {
     console.error("Database Error:", error);

@@ -9,6 +9,7 @@ export const translateText = async (
   sourceText,
   historyText,
   markdownMode,
+  includeSource,
   setDisplayText,
   setHistoryText
 ) => {
@@ -22,12 +23,16 @@ export const translateText = async (
         prevHistoryText + (historyText === "" ? "" : "\n\n") + translated
     );
   } else {
+    console.log("Original Text:" + sourceText);
     // 整理
     let organized = organizeText(sourceText);
+    console.log("After organizeText():" + organized);
     // 分割
     let split = splitText(organized);
+    console.log("After splitText():" + split);
     // 翻译
-    let result = await translateArray(split, setDisplayText);
+    let result = await translateArray(split, setDisplayText, includeSource);
+    console.log("After TranslateArray():" + result);
     // 组合
     setHistoryText(
       (prevHistoryText) =>
@@ -122,7 +127,7 @@ const translateArrayMdMode = async (sourceArray, setDisplayText) => {
   }
 };
 
-const translateArray = async (sourceArray, setDisplayText) => {
+const translateArray = async (sourceArray, setDisplayText, includeSource) => {
   const translationPromises = sourceArray.map(translateString);
 
   try {
@@ -130,7 +135,9 @@ const translateArray = async (sourceArray, setDisplayText) => {
 
     const result = sourceArray.map((sourceItem, index) => {
       const translatedItem = translations[index] || "";
-      return `${sourceItem}\n\n${translatedItem}`;
+      return includeSource
+        ? `${sourceItem}\n\n${translatedItem}`
+        : `${translatedItem}`;
     });
 
     // 所有 Promise 完成后更新状态
@@ -172,7 +179,7 @@ const cleanZoomCaptionTimeStamp = (sourceText) => {
 };
 
 const organizeText = (sourceText) => {
-  // 删除符合正则表达式的行
+  // 清除Zoom caption的时间戳
   let cleanedText = cleanZoomCaptionTimeStamp(sourceText);
 
   // 去掉换行符附近的空白字符
@@ -183,7 +190,7 @@ const organizeText = (sourceText) => {
   let trimmedText = paragraphs.join("\n");
 
   let result = "";
-  let textArray = trimmedText.split("");
+  let textArray = trimmedText.split(""); // 单字符组成的数组
 
   // 循环寻找换行符号
   for (let i = 0; i < textArray.length; i++) {
@@ -193,7 +200,12 @@ const organizeText = (sourceText) => {
 
     if (currentChar === "\n") {
       // 段落结尾
-      if ((previousChar === ".") | (previousChar === " ")) {
+      if (
+        (previousChar === ".") |
+        (previousChar === " ") |
+        (previousChar === ":") |
+        (previousChar === ";")
+      ) {
         if (nextChar !== "\n") {
           // 段落结尾添加空行
           textArray.splice(i + 1, 0, "\n");
@@ -243,9 +255,12 @@ export const downloadText = (historyText) => {
  * @param {string} sourceText State value
  * @param {bool} markdownMode State value
  * @param {function} setSourceText State function
+ *
+ * 排除项目符号与项目内容不在一行的情况, 将二者合并为一行
  */
 export const cleanUpText = (sourceText, markdownMode, setSourceText) => {
   let sourceArray = splitTextMdMode(sourceText);
+  console.log("After splitTextMdMode():" + sourceArray);
 
   // let trimmedArray = removeSpace(sourceArray);
   // console.log(trimmedArray);

@@ -13,6 +13,7 @@ export default function Home() {
   const [historyText, setHistoryText] = useState("");
   const [fileContent, setFileContent] = useState("");
   const [markdownMode, setMarkdownMode] = useState(true);
+  const [includeSource, setIncludeSource] = useState(true);
 
   const inputFileRef = useRef(null);
   const [bind, setBind] = useState(false);
@@ -53,6 +54,7 @@ export default function Home() {
       sourceText,
       historyText,
       markdownMode,
+      includeSource,
       setDisplayText,
       setHistoryText
     );
@@ -76,6 +78,10 @@ export default function Home() {
 
   const handleChangeMarkdownMode = () => {
     setMarkdownMode(!markdownMode);
+  };
+
+  const handleChangeIncludeSource = () => {
+    setIncludeSource(!includeSource);
   };
 
   const handleCleanUp = () => {
@@ -131,6 +137,13 @@ export default function Home() {
         onChange={handleChangeMarkdownMode}
       />
       <label htmlFor="markdownMode">Markdown Mode</label>
+      <input
+        type="checkbox"
+        name="includeSource"
+        checked={includeSource}
+        onChange={handleChangeIncludeSource}
+      />
+      <label htmlFor="markdownMode">Source Included In Translation</label>
       <TextDisplay
         displayText={displayText}
         handleClearDisplay={handleClearDisplay}
