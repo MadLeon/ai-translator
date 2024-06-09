@@ -1,3 +1,5 @@
+import { TextField } from "@mui/material";
+
 export default function TextArea({
   editable,
   placeholder,
@@ -5,14 +7,22 @@ export default function TextArea({
   handleInputChange,
 }) {
   return (
-    <textarea
-      type="text"
-      readOnly={!editable}
+    <TextField
+      placeholder={placeholder}
       value={sourceText}
       onChange={handleInputChange}
-      placeholder={placeholder}
-      rows={20}
-      style={{ width: "50rem" }}
+      multiline
+      rows={10}
+      InputProps={{
+        readOnly: !editable,
+      }}
+      sx={{
+        "& .MuiOutlinedInput-root": {
+          "& fieldset": {
+            border: "none",
+          },
+        },
+      }}
     />
   );
 }

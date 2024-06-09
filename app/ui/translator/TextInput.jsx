@@ -1,3 +1,5 @@
+import { Box, IconButton, Stack } from "@mui/material";
+import { ContentPaste, HighlightOff } from "@mui/icons-material";
 import TextArea from "./TextArea";
 
 export default function TextInput({
@@ -7,15 +9,26 @@ export default function TextInput({
   handleInputPaste,
 }) {
   return (
-    <div>
+    <Box
+      display="flex"
+      flexDirection="column"
+      p={1}
+      sx={{ borderRadius: 2, bgcolor: "white", width: "100%" }}
+    >
       <TextArea
         editable={true}
-        placeholder={"输入文本"}
+        placeholder={"Input Text"}
         sourceText={sourceText}
         handleInputChange={handleInputChange}
       />
-      <button onClick={handleInputPaste}>粘贴</button>
-      <button onClick={handleClearInput}>清空</button>
-    </div>
+      <Stack direction="row">
+        <IconButton onClick={handleClearInput}>
+          <HighlightOff />
+        </IconButton>
+        <IconButton onClick={handleInputPaste}>
+          <ContentPaste />
+        </IconButton>
+      </Stack>
+    </Box>
   );
 }

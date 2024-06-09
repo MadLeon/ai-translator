@@ -1,3 +1,5 @@
+import { Box, IconButton, Stack } from "@mui/material";
+import { ContentCopy, HighlightOff } from "@mui/icons-material";
 import TextArea from "./TextArea";
 
 export default function TextDisplay({
@@ -7,15 +9,27 @@ export default function TextDisplay({
   handleDisplayCopy,
 }) {
   return (
-    <div>
+    <Box
+      display="flex"
+      alignItems="stretch"
+      flexDirection="column"
+      p={1}
+      sx={{ borderRadius: 2, bgcolor: "white", width: "100%" }}
+    >
       <TextArea
         editable={false}
-        placeholder={"翻译结果"}
+        placeholder={"Translation Result"}
         sourceText={displayText}
         handleInputChange={handleInputChange}
       />
-      <button onClick={handleDisplayCopy}>复制</button>
-      <button onClick={handleClearDisplay}>清空</button>
-    </div>
+      <Stack direction="row">
+        <IconButton onClick={handleClearDisplay}>
+          <HighlightOff />
+        </IconButton>
+        <IconButton onClick={handleDisplayCopy}>
+          <ContentCopy />
+        </IconButton>
+      </Stack>
+    </Box>
   );
 }

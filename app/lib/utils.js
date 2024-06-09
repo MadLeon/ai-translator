@@ -7,6 +7,8 @@ const client = new OpenAI({
 
 export const translateText = async (
   sourceText,
+  sourceLanguage,
+  translateLanguage,
   historyText,
   markdownMode,
   includeSource,
@@ -17,7 +19,12 @@ export const translateText = async (
   if (markdownMode) {
     let split = splitTextMdMode(sourceText);
     let organized = organizeTextMdMode(split);
-    let translated = await translateArrayMdMode(organized, setDisplayText);
+    let translated = await translateArrayMdMode(
+      organized,
+      sourceLanguage,
+      translateLanguage,
+      setDisplayText
+    );
     setHistoryText(
       (prevHistoryText) =>
         prevHistoryText + (historyText === "" ? "" : "\n\n") + translated
@@ -31,7 +38,13 @@ export const translateText = async (
     let split = splitText(organized);
     console.log("After splitText():" + split);
     // 翻译
-    let result = await translateArray(split, setDisplayText, includeSource);
+    let result = await translateArray(
+      split,
+      sourceLanguage,
+      translateLanguage,
+      setDisplayText,
+      includeSource
+    );
     console.log("After TranslateArray():" + result);
     // 组合
     setHistoryText(
@@ -100,8 +113,15 @@ const splitTextMdMode = (sourceText) => {
   return sourceText.split("\n").map((item) => item + "\n");
 };
 
-const translateArrayMdMode = async (sourceArray, setDisplayText) => {
-  const translationPromises = sourceArray.map(translateString);
+const translateArrayMdMode = async (
+  sourceArray,
+  sourceLanguage,
+  translateLanguage,
+  setDisplayText
+) => {
+  const translationPromises = sourceArray.map((source) =>
+    translateString(source, sourceLanguage, translateLanguage)
+  );
 
   try {
     const translations = await Promise.all(translationPromises);
@@ -127,8 +147,16 @@ const translateArrayMdMode = async (sourceArray, setDisplayText) => {
   }
 };
 
-const translateArray = async (sourceArray, setDisplayText, includeSource) => {
-  const translationPromises = sourceArray.map(translateString);
+const translateArray = async (
+  sourceArray,
+  sourceLanguage,
+  translateLanguage,
+  setDisplayText,
+  includeSource
+) => {
+  const translationPromises = sourceArray.map((source) =>
+    translateString(source, sourceLanguage, translateLanguage)
+  );
 
   try {
     const translations = await Promise.all(translationPromises);
@@ -150,14 +178,18 @@ const translateArray = async (sourceArray, setDisplayText, includeSource) => {
   }
 };
 
-const translateString = async (sourceText) => {
+const translateString = async (
+  sourceText,
+  sourceLanguage,
+  translateLanguage
+) => {
+  console.log(translateLanguage);
   if (sourceText === "" || sourceText === "\n") return;
   const completion = await client.chat.completions.create({
     messages: [
       {
         role: "system",
-        content:
-          "You will be provided with a sentence in English, and your task is to translate it into zh-CN.",
+        content: `You will be provided with a sentence in ${sourceLanguage}, and your task is to translate it into ${translateLanguage}.`,
       },
       {
         role: "user",

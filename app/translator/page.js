@@ -2,9 +2,21 @@
 
 import { useState, useEffect, useRef } from "react";
 
+import {
+  Box,
+  Button,
+  Container,
+  FormControl,
+  MenuItem,
+  Select,
+  Stack,
+  Switch,
+  Typography,
+} from "@mui/material";
+import { grey } from "@mui/material/colors";
+
 import TextInput from "../ui/translator/TextInput";
 import TextDisplay from "../ui/translator/TextDisplay";
-import TextHistory from "../ui/translator/TextHistory";
 import { translateText, downloadText, cleanUpText } from "../lib/utils";
 
 export default function Home() {
@@ -12,8 +24,12 @@ export default function Home() {
   const [displayText, setDisplayText] = useState(""); // 输出框state
   const [historyText, setHistoryText] = useState("");
   const [fileContent, setFileContent] = useState("");
-  const [markdownMode, setMarkdownMode] = useState(true);
-  const [includeSource, setIncludeSource] = useState(true);
+  const [markdownMode, setMarkdownMode] = useState(false);
+  const [includeSource, setIncludeSource] = useState(false);
+
+  const [sourceLanguage, setSourceLanguage] = useState("English");
+  const [translateLanguage, setTranslateLanguage] =
+    useState("Simplified Chinese");
 
   const inputFileRef = useRef(null);
   const [bind, setBind] = useState(false);
@@ -25,6 +41,21 @@ export default function Home() {
       setBind(true);
     }
   }, [filePath]);
+
+  // ----------------------- Config ----------------------
+
+  const handleChangeSourceLanguage = (e) => {
+    setSourceLanguage(e.target.value);
+  };
+
+  const handleChangeTranslateLanguage = (e) => {
+    setTranslateLanguage(e.target.value);
+  };
+
+  const handleDefaultLanguage = (e) => {
+    setSourceLanguage("English");
+    setTranslateLanguage("Simplified Chinese");
+  };
 
   // ----------------------- 输入框 -----------------------
 
@@ -52,6 +83,8 @@ export default function Home() {
   const handleTranslate = async () => {
     translateText(
       sourceText,
+      sourceLanguage,
+      translateLanguage,
       historyText,
       markdownMode,
       includeSource,
@@ -111,50 +144,135 @@ export default function Home() {
   };
 
   return (
-    <div>
-      <button onClick={handleBindClick}>打开文件</button>
-      <input
-        type="file"
-        accept=""
-        ref={inputFileRef}
-        style={{ display: "none" }}
-        onChange={handleSelectFile}
-      />
-      <span>{bind ? "🟢" : "🔴"}</span>
-      <span>{fileName}</span>
-      <TextInput
-        sourceText={sourceText}
-        handleInputChange={handleInputChange}
-        handleClearInput={handleClearInput}
-        handleInputPaste={handleInputPaste}
-      />
-      <button onClick={handleCleanUp}>整理文本</button>
-      <button onClick={handleTranslate}>翻译文本</button>
-      <input
-        type="checkbox"
-        name="markdownMode"
-        checked={markdownMode}
-        onChange={handleChangeMarkdownMode}
-      />
-      <label htmlFor="markdownMode">Markdown Mode</label>
-      <input
-        type="checkbox"
-        name="includeSource"
-        checked={includeSource}
-        onChange={handleChangeIncludeSource}
-      />
-      <label htmlFor="markdownMode">Source Included In Translation</label>
-      <TextDisplay
-        displayText={displayText}
-        handleClearDisplay={handleClearDisplay}
-        handleDisplayCopy={handleDisplayCopy}
-      />
-      <TextHistory
-        historyText={historyText}
-        handleHistoryChange={handleHistoryChange}
-        handleDownload={handleDownload}
-        handleClearHistory={handleClearHistory}
-      />
-    </div>
+    <Container sx={{ bgcolor: grey[200], minHeight: "100vh" }}>
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        gap={3}
+        sx={{ minHeight: "100vh", width: "60%", margin: "0 auto" }}
+      >
+        {/* -------------------- Configuration Area -------------------- */}
+        <Box
+          display="flex"
+          alignItems="center"
+          flexDirection="row"
+          justifyContent="space-between"
+          gap={4}
+          p={1}
+          sx={{ borderRadius: 2, bgcolor: "white", width: "100%" }}
+        >
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Typography>From</Typography>
+            <FormControl size="small">
+              <Select
+                id="sourceLanguage"
+                value={sourceLanguage}
+                onChange={handleChangeSourceLanguage}
+                autoWidth
+              >
+                <MenuItem value={"English"}>English</MenuItem>
+                <MenuItem value={"Simplified Chinese"}>
+                  Simplified Chinese
+                </MenuItem>
+                <MenuItem value={"Traditional Chinese"}>
+                  Traditional Chinese
+                </MenuItem>
+                <MenuItem value={"Japanese"}>Japanese</MenuItem>
+              </Select>
+            </FormControl>
+            <Typography>To</Typography>
+            <FormControl size="small">
+              <Select
+                id="sourceLanguage"
+                value={translateLanguage}
+                onChange={handleChangeTranslateLanguage}
+                autoWidth
+              >
+                <MenuItem value={"Simplified Chinese"}>
+                  Simplified Chinese
+                </MenuItem>
+                <MenuItem value={"Traditional Chinese"}>
+                  Traditional Chinese
+                </MenuItem>
+                <MenuItem value={"English"}>English</MenuItem>
+                <MenuItem value={"Japanese"}>Japanese</MenuItem>
+              </Select>
+            </FormControl>
+          </Stack>
+          <Stack>
+            <Button variant="contained" onClick={handleDefaultLanguage}>
+              Default
+            </Button>
+          </Stack>
+        </Box>
+
+        {/* <button onClick={handleBindClick}>打开文件</button>
+        <input
+          type="file"
+          accept=""
+          ref={inputFileRef}
+          style={{ display: "none" }}
+          onChange={handleSelectFile}
+        />
+        <span>{bind ? "🟢" : "🔴"}</span>
+        <span>{fileName}</span> */}
+
+        {/* -------------------- Input Area -------------------- */}
+
+        <TextInput
+          sourceText={sourceText}
+          handleInputChange={handleInputChange}
+          handleClearInput={handleClearInput}
+          handleInputPaste={handleInputPaste}
+        />
+
+        {/* -------------------- Action Area -------------------- */}
+
+        <Box
+          display="flex"
+          alignItems="center"
+          flexDirection="row"
+          justifyContent="space-between"
+          gap={4}
+          p={1}
+          sx={{ borderRadius: 2, bgcolor: "white", width: "100%" }}
+        >
+          <Stack direction="row" gap={1} alignItems="center">
+            <Switch
+              checked={markdownMode}
+              onChange={handleChangeMarkdownMode}
+            ></Switch>
+            <Typography>Markdown</Typography>
+            <Switch
+              checked={includeSource}
+              onChange={handleChangeIncludeSource}
+            ></Switch>
+            <Typography>Source Included</Typography>
+          </Stack>
+          <Stack direction="row" gap={2}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleCleanUp}
+            >
+              Organize
+            </Button>
+            <Button variant="contained" onClick={handleTranslate}>
+              Translate
+            </Button>
+          </Stack>
+        </Box>
+
+        {/* -------------------- Translation Result -------------------- */}
+
+        <TextDisplay
+          displayText={displayText}
+          handleClearDisplay={handleClearDisplay}
+          handleDisplayCopy={handleDisplayCopy}
+        />
+      </Box>
+    </Container>
   );
 }
